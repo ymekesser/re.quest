@@ -57,7 +57,7 @@ def extract_query_params():
 @app.route("/show", methods=["GET"])
 def display_request():
     config = {
-        "refresh_interval": os.getenv('REFRESH_INTERVAL', 5000)
+        "refresh_interval": os.getenv('REFRESH_INTERVAL', 3000)
     }
 
     return render_template("request_display.html", details_list=request_details_list, config=config)
