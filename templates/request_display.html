@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Re.Quest</title>
@@ -15,7 +16,7 @@
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
 
@@ -44,45 +45,62 @@
             font-size: 0.8em;
             margin-bottom: 10px;
         }
+
+        .highlight {
+            animation: flashAnimation 2s 1;
+        }
+
+        @keyframes flashAnimation {
+            0% {
+                background-color: #ffff99;
+            }
+
+            100% {
+                background-color: transparent;
+            }
+        }
     </style>
 </head>
+
 <body>
     <h1>Re.Quest: HTTP Request Details</h1>
     {% for details in details_list %}
-        <div class="container">
-            <div class="timestamp">{{ details.timestamp }} </div>
+    <div class="container" id="request-{{ details.timestamp | replace(" ", " -") | replace(":", "" ) }}">
+        <div class="timestamp">{{ details.timestamp }} </div>
 
-            <h2>Method: {{ details.method }}</h2>
+        <h2>Method: {{ details.method }}</h2>
 
-            <h2>Path: {{ details.path }}</h2>
+        <h2>Path: {{ details.path }}</h2>
 
-            <h2>Query Parameters:</h2>
-            {% if details.query_params %}
-                <ul>
-                    {% for param, value in details.query_params.items() %}
-                        <li>{{ param }}: {{ value }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No query parameters.</p>
-            {% endif %}
+        <h2>Query Parameters:</h2>
+        {% if details.query_params %}
+        <ul>
+            {% for param, value in details.query_params.items() %}
+            <li>{{ param }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No query parameters.</p>
+        {% endif %}
 
-            <h2>Headers:</h2>
-            <ul>
-                {% for header, value in details.headers.items() %}
-                    <li>{{ header }}: {{ value }}</li>
-                {% endfor %}
-            </ul>
+        <h2>Headers:</h2>
+        <ul>
+            {% for header, value in details.headers.items() %}
+            <li>{{ header }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
 
-            <h2>Body:</h2>
-            <pre>{{ details.body }}</pre>
-        </div>
-        </div>
+        <h2>Body:</h2>
+        <pre>{{ details.body }}</pre>
+    </div>
+    </div>
     {% endfor %}
 
     <script>
         // Function to periodically refresh the request display
         function refreshRequestDisplay() {
+            const currentFirstRequestId = document.querySelector(".container")?.id;
+
             fetch('/show')
                 .then(response => response.text())
                 .then(html => {
@@ -90,6 +108,12 @@
                     const doc = parser.parseFromString(html, "text/html");
                     const newContent = doc.body.innerHTML;
                     document.body.innerHTML = newContent;
+
+                    // Highlight the first request container if it's new
+                    const newFirstRequestId = document.querySelector(".container")?.id;
+                    if (newFirstRequestId !== currentFirstRequestId) {
+                        document.querySelector(".container").classList.add('highlight');
+                    }
                 })
                 .catch(err => console.error('Error refreshing request display:', err));
         }
@@ -98,4 +122,5 @@
         setInterval(refreshRequestDisplay, 3000);
     </script>
 </body>
+
 </html>
