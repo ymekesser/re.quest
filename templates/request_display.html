@@ -40,6 +40,11 @@
             border-radius: 5px;
         }
 
+        .value {
+            background-color: #eee;
+            overflow-wrap: break-word;
+        }
+
         .timestamp {
             color: #999;
             font-size: 0.8em;
@@ -56,7 +61,7 @@
             }
 
             100% {
-                background-color: transparent;
+                background-color: #f0f0f0;
             }
         }
     </style>
@@ -76,7 +81,7 @@
         {% if details.query_params %}
         <ul>
             {% for param, value in details.query_params.items() %}
-            <li>{{ param }}: {{ value }}</li>
+            <li>{{ param }}: <span class="value">{{ value }}</span></li>
             {% endfor %}
         </ul>
         {% else %}
@@ -86,7 +91,7 @@
         <h2>Headers:</h2>
         <ul>
             {% for header, value in details.headers.items() %}
-            <li>{{ header }}: {{ value }}</li>
+            <li>{{ header }}: <span class="value">{{ value }}</span></li>
             {% endfor %}
         </ul>
 
