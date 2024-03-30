@@ -1,10 +1,12 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from flask import Flask, request, render_template
 from threading import Lock
 from datetime import datetime
 import json
 import os
 import sys
-from dotenv import load_dotenv
 
 app = Flask(__name__)
 
@@ -54,13 +56,14 @@ def extract_query_params():
 
 @app.route("/show", methods=["GET"])
 def display_request():
-    # Render the template with the request details
-    return render_template("request_display.html", details_list=request_details_list)
+    config = {
+        "refresh_interval": os.getenv('REFRESH_INTERVAL', 5000)
+    }
+
+    return render_template("request_display.html", details_list=request_details_list, config=config)
 
 
 if __name__ == "__main__":
-    load_dotenv()  # Take environment variables from .env.
-
     port = int(os.environ.get("FLASK_PORT", 5000))
     debug = os.getenv("FLASK_DEBUG", "false").lower() in ["true", "1", "t"]
 

@@ -102,29 +102,30 @@
     {% endfor %}
 
     <script>
-        // Function to periodically refresh the request display
-        function refreshRequestDisplay() {
-            const currentFirstRequestId = document.querySelector(".container")?.id;
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to periodically refresh the request display
+            function refreshRequestDisplay() {
+                const currentFirstRequestId = document.querySelector(".container")?.id;
 
-            fetch('/show')
-                .then(response => response.text())
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, "text/html");
-                    const newContent = doc.body.innerHTML;
-                    document.body.innerHTML = newContent;
+                fetch('/show')
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, "text/html");
+                        const newContent = doc.body.innerHTML;
+                        document.body.innerHTML = newContent;
 
-                    // Highlight the first request container if it's new
-                    const newFirstRequestId = document.querySelector(".container")?.id;
-                    if (newFirstRequestId !== currentFirstRequestId) {
-                        document.querySelector(".container").classList.add('highlight');
-                    }
-                })
-                .catch(err => console.error('Error refreshing request display:', err));
-        }
+                        // Highlight the first request container if it's new
+                        const newFirstRequestId = document.querySelector(".container")?.id;
+                        if (newFirstRequestId !== currentFirstRequestId) {
+                            document.querySelector(".container").classList.add('highlight');
+                        }
+                    })
+                    .catch(err => console.error('Error refreshing request display:', err));
+            }
 
-        // Poll every 5 seconds
-        setInterval(refreshRequestDisplay, 3000);
+            setInterval(refreshRequestDisplay, {{ config.refresh_interval }});
+        });
     </script>
 </body>
 
