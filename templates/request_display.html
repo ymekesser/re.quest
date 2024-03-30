@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Re.Quest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        h2 {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        pre {
+            background-color: #eee;
+            padding: 10px;
+            overflow: auto;
+            border-radius: 5px;
+        }
+
+        .timestamp {
+            color: #999;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Re.Quest: HTTP Request Details</h1>
+    {% for details in details_list %}
+        <div class="container">
+            <div class="timestamp">{{ details.timestamp }} </div>
+
+            <h2>Method: {{ details.method }}</h2>
+
+            <h2>Path: {{ details.path }}</h2>
+
+            <h2>Query Parameters:</h2>
+            {% if details.query_params %}
+                <ul>
+                    {% for param, value in details.query_params.items() %}
+                        <li>{{ param }}: {{ value }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No query parameters.</p>
+            {% endif %}
+
+            <h2>Headers:</h2>
+            <ul>
+                {% for header, value in details.headers.items() %}
+                    <li>{{ header }}: {{ value }}</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Body:</h2>
+            <pre>{{ details.body }}</pre>
+        </div>
+        </div>
+    {% endfor %}
+
+    <script>
+        // Function to periodically refresh the request display
+        function refreshRequestDisplay() {
+            fetch('/show')
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, "text/html");
+                    const newContent = doc.body.innerHTML;
+                    document.body.innerHTML = newContent;
+                })
+                .catch(err => console.error('Error refreshing request display:', err));
+        }
+
+        // Poll every 5 seconds
+        setInterval(refreshRequestDisplay, 3000);
+    </script>
+</body>
+</html>
