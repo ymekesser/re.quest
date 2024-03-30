@@ -1,2 +1,5 @@
-flask
-python-dotenv
+flask==2.0.1
+python-dotenv==1.0.1
+
+# fix for flask issue: https://stackoverflow.com/questions/77213053/why-did-flask-start-failing-with-importerror-cannot-import-name-url-quote-fr
+Werkzeug==2.2.2

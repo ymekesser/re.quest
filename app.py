@@ -64,9 +64,6 @@ def display_request():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("FLASK_PORT", 5000))
     debug = os.getenv("FLASK_DEBUG", "false").lower() in ["true", "1", "t"]
 
-    print(f"Starting server on port {port}, debug={debug}", file=sys.stdout)
-
-    app.run(debug=debug, port=port)
+    app.run(debug=debug)
